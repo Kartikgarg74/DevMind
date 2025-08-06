@@ -34,6 +34,9 @@ export const Sidebar = () => {
           <button
             onClick={() => setCollapsed(!collapsed)}
             className="p-1 rounded-lg hover:bg-gray-800"
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            type="button"
           >
             <ArrowLeftOnRectangleIcon
               className={`h-6 w-6 transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`}

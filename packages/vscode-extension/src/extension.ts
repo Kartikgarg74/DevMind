@@ -4,6 +4,7 @@ import { generateCommitMessage } from './commands/generateCommitMessage';
 import { DebugCommandHandler } from './commands/askForDebug';
 import { ReviewCommandHandler } from './commands/requestReview';
 import { SettingsPanel } from './settings/SettingsPanel';
+import { AuthManager } from './auth/AuthManager';
 // DevMind extension activation
 export async function activate(context: vscode.ExtensionContext) {
   console.log('DevMind extension is now active');
@@ -34,6 +35,16 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // Add commands to subscriptions
     context.subscriptions.push(commitMessageCommand, debugCommand);
+
+    // Register settings panel
+    const settingsCommand = vscode.commands.registerCommand('devmind.openSettings', () => {
+    new SettingsPanel(context);
+    });
+    context.subscriptions.push(settingsCommand);
+
+    // Initialize authentication manager
+    const authManager = AuthManager.getInstance(context);
+    await authManager.initialize(client);
 
     // Check if API is reachable
     const isHealthy = await client.checkHealth();
