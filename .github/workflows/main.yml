@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install pytest pytest-cov flake8
+          pip install pytest pytest-cov flake8 email-validator
 
       - name: Lint
         run: flake8 app/core/ app/agents/ --max-line-length=120 --ignore=E501,W503,E402,E302,E305,E128,F401,E722,E301,F841,E303,E999 --count
