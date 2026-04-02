@@ -40,6 +40,9 @@ jobs:
           python -c "from app.core.config import settings; print('Config OK')"
           python -c "from app.services.llm_service import LLMService; print('LLM Service OK')"
           python -c "from app.services.git_service import GitService; print('Git Service OK')"
+          python -c "from app.core.security import create_access_token; print('Security OK')"
+          # Note: Full app import requires ChromaDB + sentence-transformers (heavy deps)
+          # Vector store chain has pre-existing async issues tracked for fix
 
   vscode-extension:
     name: VS Code Extension
