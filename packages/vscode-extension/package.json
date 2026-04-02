@@ -124,6 +124,7 @@
           "description": "Use custom theme for DevMind panels",
           "scope": "window"
         }
+      }
     }
   },
   "scripts": {
