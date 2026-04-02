@@ -56,23 +56,24 @@ Focus on the most likely cause of the issue rather than listing all possibilitie
                 error_message = error_message[:2000] + "\n... [truncated for memory optimization]"
 
             # Build the debugging prompt
-            prompt = f"""
-Debug Request: {problem_description}
-
-{f"Error Message: {error_message}" if error_message else ""}
-
-{f"Code Snippet:\n```{language}\n{code_snippet}\n```" if code_snippet else ""}
-
-{f"File: {file_path}" if file_path else ""}
-{f"Repository: {repository}" if repository else ""}
-{f"Language: {language}" if language else ""}
-
-Please analyze this issue and provide:
+            parts = [f"Debug Request: {problem_description}"]
+            if error_message:
+                parts.append(f"Error Message: {error_message}")
+            if code_snippet:
+                code_block = f"```{language}" + "\n" + code_snippet + "\n```"
+                parts.append(f"Code Snippet:\n{code_block}")
+            if file_path:
+                parts.append(f"File: {file_path}")
+            if repository:
+                parts.append(f"Repository: {repository}")
+            if language:
+                parts.append(f"Language: {language}")
+            parts.append("""Please analyze this issue and provide:
 1. The root cause of the problem
 2. A detailed explanation of what's happening
 3. A solution with fixed code
-4. Any additional recommendations to prevent similar issues
-"""
+4. Any additional recommendations to prevent similar issues""")
+            prompt = "\n\n".join(parts)
 
             # Search for relevant code context if repository is provided
             context_results = []
