@@ -48,7 +48,7 @@ export class DebugCommandHandler {
             }, async (progress) => {
                 try {
                     // Call API for debug analysis
-                    const response = await this.client.debug({
+                    const response = await this.client.debugCode({
                         problem_description: "Please analyze this code and provide debugging assistance",
                         code_snippet: debugContext.code,
                         error_message: debugContext.error,

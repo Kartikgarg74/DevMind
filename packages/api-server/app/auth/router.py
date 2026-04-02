@@ -20,14 +20,13 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 @router.post("/login", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
     """Login user and return access token."""
-    # Here you would typically verify against your database
-    # For demo, we'll use a mock user
-    if form_data.username != "demo" or not verify_password(form_data.password, get_password_hash("demo")):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    # TODO: Replace with real database user lookup
+    # For now, reject all logins until a proper user store is implemented
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail="User authentication requires database setup. Use GitHub OAuth or API key instead.",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 

@@ -1,5 +1,38 @@
+# Dependencies
+node_modules/
+venv/
 /venv/lib
 /venv/bin
-node_modules
-venv
+
+# Environment
 .env
+.env.*
+!.env.example
+
+# Secrets
+private_keys.json
+**/private_keys.json
+
+# Build artifacts
+.next/
+dist/
+build/
+*.egg-info/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Logs
+*.log
+
+# Data
+data/repos/
+*.db

@@ -4,6 +4,7 @@ Optimized for M2 Mac with 8GB RAM and 256GB storage.
 """
 import os
 from typing import Optional
+from datetime import datetime
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -14,7 +15,7 @@ class Settings:
     PROJECT_NAME: str = "DevMind API"
     PROJECT_VERSION: str = "0.1.0"
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
-    DEBUG: bool = os.getenv("DEBUG", "true").lower() == "true"
+    DEBUG: bool = os.getenv("DEBUG", "false").lower() == "true"
 
     # API Configuration
     API_V1_STR: str = "/api/v1"
@@ -46,7 +47,7 @@ class Settings:
     GITHUB_REDIRECT_URI: str = os.getenv("GITHUB_REDIRECT_URI", "http://localhost:8000/api/v1/auth/github/callback")
 
     # Security
-    SECRET_KEY: str = os.getenv("SECRET_KEY", "devmind-development-key-change-in-production")
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 
     # Monitoring Configuration

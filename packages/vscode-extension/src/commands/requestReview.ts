@@ -53,7 +53,7 @@ export class ReviewCommandHandler {
             }, async (progress) => {
                 try {
                     // Call API for review analysis
-                    const response = await this.client.review({
+                    const response = await this.client.reviewCode({
                         code_diff: reviewContext.diff,
                         file_paths: reviewContext.filePaths,
                         repository: reviewContext.repository,
