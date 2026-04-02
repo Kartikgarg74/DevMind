@@ -26,8 +26,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          pip install pytest pytest-cov flake8 email-validator
+          # Install core deps, skip heavy ML/vector deps that cause migration issues
+          pip install fastapi uvicorn python-dotenv pydantic pydantic-settings python-multipart
+          pip install groq openai httpx aiofiles gitpython pygit2
+          pip install python-jose passlib bcrypt email-validator
+          pip install pytest pytest-cov flake8
 
       - name: Lint
         run: flake8 app/core/ app/agents/ --max-line-length=120 --ignore=E501,W503,E402,E302,E305,E128,F401,E722,E301,F841,E303,E999 --count
