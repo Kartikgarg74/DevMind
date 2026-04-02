@@ -1,4 +1,5 @@
 """Review agent for analyzing code changes with memory optimization for M2 Mac."""
+import re
 from typing import Dict, Any, List, Optional
 from app.agents.base_agent import BaseAgent
 import logging
@@ -6,6 +7,11 @@ import time
 import gc
 
 logger = logging.getLogger(__name__)
+
+_SUSPICIOUS_PATTERNS = re.compile(
+    r"ignore\s+previous|disregard\s+instructions|you\s+are\s+now|system\s*:\s*override",
+    re.IGNORECASE,
+)
 
 class ReviewAgent(BaseAgent):
     def __init__(self):
@@ -44,6 +50,16 @@ Focus on the most important issues rather than minor style preferences."""
                     "message": "Either code_diff or both repository and file_path are required",
                     "data": None
                 }
+
+            # Check for prompt injection in user-controlled fields
+            for field in [pr_title, pr_description]:
+                if field and _SUSPICIOUS_PATTERNS.search(field):
+                    logger.warning("Possible prompt injection in review request")
+                    return {
+                        "success": False,
+                        "message": "Input rejected: suspicious content detected",
+                        "data": None
+                    }
 
             # Limit diff size to prevent memory issues
             if len(code_diff) > 15000:  # ~15KB limit

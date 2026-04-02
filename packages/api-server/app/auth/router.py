@@ -19,43 +19,11 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/login", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
-    """Login user and return access token."""
-    # TODO: Replace with real database user lookup
-    # For now, reject all logins until a proper user store is implemented
+    """Login endpoint — disabled pending database integration. Use GitHub OAuth or API key."""
     raise HTTPException(
         status_code=status.HTTP_501_NOT_IMPLEMENTED,
         detail="User authentication requires database setup. Use GitHub OAuth or API key instead.",
         headers={"WWW-Authenticate": "Bearer"},
-    )
-
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-
-    # Create access token
-    access_token = create_access_token(
-        data={
-            "sub": "1",  # user id
-            "username": form_data.username,
-            "scopes": form_data.scopes
-        },
-        expires_delta=access_token_expires
-    )
-
-    # Create mock user for demo
-    user = User(
-        id=1,
-        username=form_data.username,
-        email="demo@example.com",
-        role="user",
-        is_active=True,
-        created_at="2025-01-01T00:00:00",
-        updated_at="2025-01-01T00:00:00"
-    )
-
-    return Token(
-        access_token=access_token,
-        token_type="bearer",
-        expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-        user=user
     )
 
 @router.post("/github/login")

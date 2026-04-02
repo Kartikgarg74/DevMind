@@ -109,7 +109,7 @@ class MonitoringService:
 
         # Check vector store health
         try:
-            from app.services.vectore_store_service import vector_store
+            from app.services.vector_store_service import vector_store
             vector_start = datetime.utcnow()
             stats = await vector_store.get_collection_stats()
             vector_latency = (datetime.utcnow() - vector_start).total_seconds()

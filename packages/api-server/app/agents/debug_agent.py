@@ -1,4 +1,5 @@
 """Debug agent for analyzing and fixing code issues with memory optimization for M2 Mac."""
+import re
 from typing import Dict, Any, List, Optional
 from app.agents.base_agent import BaseAgent
 import logging
@@ -7,6 +8,12 @@ import time
 import gc
 
 logger = logging.getLogger(__name__)
+
+# Patterns that should never appear in problem descriptions (potential prompt injection)
+_SUSPICIOUS_PATTERNS = re.compile(
+    r"ignore\s+previous|disregard\s+instructions|you\s+are\s+now|system\s*:\s*override",
+    re.IGNORECASE,
+)
 
 class DebugAgent(BaseAgent):
     def __init__(self):
@@ -39,21 +46,33 @@ Focus on the most likely cause of the issue rather than listing all possibilitie
             language = input_data.get("language", "")
 
             # Validate required inputs
-            if not problem_description:
+            if not problem_description or not isinstance(problem_description, str):
                 return {
                     "success": False,
                     "message": "Problem description is required",
                     "data": None
                 }
 
+            # Check for prompt injection in user-controlled fields
+            if _SUSPICIOUS_PATTERNS.search(problem_description):
+                logger.warning("Possible prompt injection in problem_description")
+                return {
+                    "success": False,
+                    "message": "Input rejected: suspicious content detected",
+                    "data": None
+                }
+
             # Limit input sizes to prevent memory issues
+            truncated = False
             if len(code_snippet) > 10000:  # ~10KB limit
                 logger.warning(f"Code snippet truncated from {len(code_snippet)} chars")
                 code_snippet = code_snippet[:10000] + "\n... [truncated for memory optimization]"
+                truncated = True
 
             if len(error_message) > 2000:
                 logger.warning(f"Error message truncated from {len(error_message)} chars")
                 error_message = error_message[:2000] + "\n... [truncated for memory optimization]"
+                truncated = True
 
             # Build the debugging prompt
             parts = [f"Debug Request: {problem_description}"]
@@ -104,10 +123,11 @@ Focus on the most likely cause of the issue rather than listing all possibilitie
 
             return {
                 "success": True,
-                "message": "Debug analysis completed",
+                "message": "Debug analysis completed" + (" (input was truncated)" if truncated else ""),
                 "data": {
                     "analysis": content,
                     "context_used": bool(context_results),
+                    "truncated": truncated,
                     "processing_time": f"{process_time:.2f}s"
                 }
             }

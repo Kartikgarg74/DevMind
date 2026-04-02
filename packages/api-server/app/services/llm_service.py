@@ -29,6 +29,11 @@ class LLMService:
                                  temperature: Optional[float] = None) -> Dict[str, Any]:
         """Generate a completion response for the given prompt."""
         if not self.api_key:
+            if settings.ENVIRONMENT == "production":
+                raise RuntimeError(
+                    "GROQ_API_KEY not configured in production. LLM functionality is unavailable."
+                )
+            logger.info("Running in mock mode (GROQ_API_KEY not set)")
             return self._mock_completion_response(prompt)
 
         headers = {
@@ -59,13 +64,22 @@ class LLMService:
                 response.raise_for_status()
                 return response.json()
         except httpx.HTTPStatusError as e:
-            logger.error(f"HTTP error from Groq API: {e.response.status_code} - {e.response.text}")
+            status_code = e.response.status_code
+            if status_code == 401:
+                logger.error("Groq API authentication failed — check GROQ_API_KEY")
+            elif status_code in (429, 503, 504):
+                logger.warning("Groq API temporarily unavailable (status %d) — retryable", status_code)
+            else:
+                logger.error("Groq API HTTP error %d: %s", status_code, e.response.text[:200])
+            raise
+        except httpx.TimeoutException as e:
+            logger.error("Groq API request timed out: %s", e)
             raise
         except httpx.RequestError as e:
-            logger.error(f"Request error when calling Groq API: {str(e)}")
+            logger.error("Network error calling Groq API: %s", e)
             raise
         except Exception as e:
-            logger.error(f"Unexpected error calling Groq API: {str(e)}")
+            logger.error("Unexpected error calling Groq API: %s", e)
             raise
 
     async def stream_completion(self,
