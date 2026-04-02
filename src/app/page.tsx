@@ -558,18 +558,18 @@ const AboutSection = () => {
               <div className="font-mono text-sm">
                 <div className="text-purple-400">// DevMind AI Assistant</div>
                 <div className="text-gray-300 mt-2">
-                  <span className="text-blue-400">const</span> devMind = <span className="text-yellow-400">new</span> <span className="text-green-400">AIAssistant</span>({
+                  <span className="text-blue-400">const</span> devMind = <span className="text-yellow-400">new</span> <span className="text-green-400">AIAssistant</span>{'({'}
                 </div>
                 <div className="text-gray-300 ml-4">
-                  intelligence: <span className="text-orange-400">'advanced'</span>,
+                  intelligence: <span className="text-orange-400">{"'advanced'"}</span>,
                 </div>
                 <div className="text-gray-300 ml-4">
-                  understanding: <span className="text-orange-400">'contextual'</span>,
+                  understanding: <span className="text-orange-400">{"'contextual'"}</span>,
                 </div>
                 <div className="text-gray-300 ml-4">
-                  performance: <span className="text-orange-400">'lightning-fast'</span>
+                  performance: <span className="text-orange-400">{"'lightning-fast'"}</span>
                 </div>
-                <div className="text-gray-300">});</div>
+                <div className="text-gray-300">{'});'}</div>
               </div>
             </div>
           </motion.div>
