@@ -37,6 +37,11 @@ class Settings:
     BATCH_SIZE: int = int(os.getenv("BATCH_SIZE", "16"))   # Memory-conscious batching
     CACHE_SIZE_MB: int = int(os.getenv("CACHE_SIZE_MB", "512"))  # RAM cache limit
 
+    # Chunking Configuration
+    MIN_CHUNK_SIZE: int = int(os.getenv("MIN_CHUNK_SIZE", "50"))
+    MAX_CHUNK_SIZE: int = int(os.getenv("MAX_CHUNK_SIZE", "500"))
+    CHUNK_OVERLAP: int = int(os.getenv("CHUNK_OVERLAP", "50"))
+
     # Git Configuration
     DEFAULT_BRANCH: str = os.getenv("DEFAULT_BRANCH", "main")
     MAX_FILE_SIZE_MB: int = int(os.getenv("MAX_FILE_SIZE_MB", "5"))  # Limit for processing
