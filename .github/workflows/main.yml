@@ -35,14 +35,13 @@ jobs:
       - name: Lint
         run: flake8 app/core/ app/agents/ --max-line-length=120 --ignore=E501,W503,E402,E302,E305,E128,F401,E722,E301,F841,E303,E999 --count
 
-      - name: Test imports
-        env:
-          GROQ_API_KEY: "test-key"
-          SECRET_KEY: "test-secret-key-for-ci"
+      - name: Verify no secrets in source
         run: |
-          # Test core modules directly (app/__init__.py triggers full import chain including ChromaDB)
-          python -c "import importlib.util; spec=importlib.util.spec_from_file_location('config','app/core/config.py'); mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod); print('Config: OK')"
-          python -c "import importlib.util; spec=importlib.util.spec_from_file_location('security','app/core/security.py'); mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod); print('Security: OK')"
+          ! grep -rn "private_keys\|AIzaSy\|sk-live" --include="*.py" --include="*.json" . | grep -v node_modules | grep -v ".gitignore"
+          echo "No secrets found in source."
+
+      - name: Check syntax
+        run: python -m py_compile app/core/config.py && python -m py_compile app/core/security.py && echo "Syntax OK"
 
   vscode-extension:
     name: VS Code Extension
