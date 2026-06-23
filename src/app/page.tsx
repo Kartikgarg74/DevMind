@@ -1,12 +1,11 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { 
   ChevronDownIcon, 
   PlayIcon,
   CheckIcon,
-  StarIcon,
   ArrowRightIcon,
   CodeBracketIcon,
   CpuChipIcon,

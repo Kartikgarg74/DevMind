@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { DevMindClient } from '../api/devmindClient';
 import * as cp from 'child_process';
 import * as util from 'util';
-import * as path from 'path';
 
 /**
  * Get staged changes using git diff
